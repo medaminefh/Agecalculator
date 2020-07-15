@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Age</title>
+</head>
+<style>
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-size: 20px;
+        letter-spacing: 2px;
+        outline: none;
+    }
+
+    html {
+        overflow-x: hidden;
+    }
+
+    body {
+        background-color: rgba(63, 80, 59, 0.829);
+        display: flex;
+        flex-direction: column;
+        padding: 0;
+        margin: 0;
+        min-width: 100vw;
+        min-height: 100vh;
+        color: #ccc;
+        overflow-x: hidden !important;
+    }
+
+    #lan {
+        position: relative;
+        top: 1.5rem;
+        left: -2rem;
+        width: 6rem;
+        height: 5rem;
+        background-color: rgba(66, 54, 45, 0.877);
+        border: 1.7px solid #ece;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-evenly;
+        align-items: center;
+        align-self: flex-end;
+    }
+
+    #lan .l {
+        display: flex;
+    }
+
+    #lan .l input {
+        width: 20px;
+        height: 20px;
+        margin-right: 5px;
+    }
+
+    #lan .l label {
+        font-size: 1.1em;
+        font-weight: 600;
+    }
+
+    .form {
+        position: relative;
+        margin: 2rem auto;
+        width: 100vw;
+        min-height: 60vh;
+        padding: 1rem;
+        border: 1.7px solid #ece;
+        border-radius: 1rem;
+        display: flex;
+        overflow: hidden;
+        flex-direction: column;
+        justify-content: space-around;
+        align-items: center;
+    }
+
+    .form::before {
+        content: "";
+        position: absolute;
+        width: 50%;
+        height: 100%;
+        top: 0;
+        left: 0;
+        background-color: rgba(0, 0, 0, 0.74);
+        z-index: -1;
+    }
+
+    .form::after {
+        content: "";
+        position: absolute;
+        width: 50%;
+        height: 100%;
+        top: 0;
+        right: 0;
+        background-color: rgba(22, 21, 21, 0.658);
+        z-index: -1;
+    }
+
+    #f {
+        position: relative;
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        text-align: center;
+    }
+
+    #f h3 {
+        font-size: 1.4rem;
+    }
+
+    #input {
+        position: relative;
+        min-width: 100%;
+    }
+
+    #input input {
+        width: 75%;
+        margin: 0.5rem 0;
+        padding: 0.5rem;
+    }
+
+    #input button {
+        font-weight: 600;
+        width: 50%;
+        padding: 0.4rem;
+        margin-bottom: 0.5rem;
+        letter-spacing: 1px;
+        cursor: pointer;
+    }
+
+    .output {
+        padding: 1rem 0;
+    }
+
+    .output h2 {
+        padding-bottom: 0.5rem;
+        font-size: 1.2rem;
+    }
+
+    .output h4 {
+        font-size: 1.1rem;
+    }
+
+    @media screen and (min-width: 650px) {
+        #input input {
+            width: 50%;
+        }
+
+        #input button {
+            width: 20%;
+        }
+    }
+
+    @media screen and (min-width: 880px) {
+
+        .form {
+            width: 35rem;
+            min-height: 20rem;
+        }
+
+        #input input {
+            width: 16rem;
+        }
+
+        #input button {
+            width: 10rem;
+        }
+    }
+</style>
+
+<body>
+    <div id="lan">
+        <div class="l">
+            <input type="radio" name="LAN" id="AR">
+            <label for="AR">AR</label>
+        </div>
+        <div class="l">
+            <input checked type="radio" name="LAN" id="EN">
+            <label for="EN">EN</label>
+
+        </div>
+    </div>
+    <div class="form">
+        <form id="f">
+            <h3 id="form">Select Your Birth Date <span title="month/day/year">(mm/dd/yyyy)</span></h3>
+            <div id="input">
+                <input type="date" value="1997-03-24" name="date">
+                <button>SEND</button>
+            </div>
+        </form>
+        <div class="output">
+            <h2>Select Your Birth Date Above</h2>
+            <h4 id="Months"></h4>
+            <h4 id="Days"></h4>
+            <h4 id="Hours"></h4>
+        </div>
+    </div>
+    <script>
+
+        let current = "EN",
+            first = false
+        const f = document.querySelector('#f'),
+            date = document.querySelector('input[type=date]'),
+            h2 = document.querySelector('.output h2'),
+            h3 = document.querySelector('#form'),
+            Months = document.querySelector('#Months'),
+            Days = document.querySelector('#Days'),
+            Hours = document.querySelector('#Hours'),
+            bt = document.querySelector('button'),
+            lan = document.querySelector('#lan'),
+
+            getAge = (dateString) => {
+                let now = new Date(),
+                    today = new Date(now.getYear(), now.getMonth(), now.getDate()),
+
+                    yearNow = now.getYear(),
+                    monthNow = now.getMonth(),
+                    dateNow = now.getDate(),
+
+                    dob = new Date(dateString)
+
+                yearDob = dob.getYear(),
+                    monthDob = dob.getMonth(),
+                    dateDob = dob.getDate(),
+                    age = {},
+                    ageString = "",
+                    yearString = "",
+                    monthString = "",
+                    dayString = "",
+                    monthAge = "",
+                    dateAge = "",
+
+                    yearAge = yearNow - yearDob;
+
+                if (monthNow >= monthDob)
+                    monthAge = monthNow - monthDob;
+                else {
+                    yearAge--;
+                    monthAge = 12 + monthNow - monthDob;
+                }
+
+                if (dateNow >= dateDob)
+                    dateAge = dateNow - dateDob;
+                else {
+                    monthAge--;
+                    dateAge = 31 + dateNow - dateDob;
+
+                    if (monthAge < 0) {
+                        monthAge = 11;
+                        yearAge--;
+                    }
+                }
+
+                age = {
+                    years: yearAge,
+                    months: monthAge,
+                    days: dateAge
+                };
+
+                switch (current) {
+                    case "EN":
+                        if (age.years > 1) yearString = " years";
+                        else yearString = " year";
+                        if (age.months > 1) monthString = " months";
+                        else monthString = " month";
+                        if (age.days > 1) dayString = " days";
+                        else dayString = " day";
+
+
+                        if ((age.years > 0) && (age.months > 0) && (age.days > 0)) {
+                            ageString = `Your Age is ${age.years + yearString} ${age.months + monthString} and ${age.days + dayString} old.`;
+                        }
+
+                        else if ((age.years == 0) && (age.months == 0) && (age.days > 0)) {
+                            ageString = "Only " + age.days + dayString + " old!";
+                        }
+
+                        else if ((age.years > 0) && (age.months == 0) && (age.days == 0)) {
+                            ageString = age.years + yearString + " old. Happy Birthday!!";
+                        }
+
+                        else if ((age.years > 0) && (age.months > 0) && (age.days == 0)) {
+                            ageString = age.years + yearString + " and " + age.months + monthString + " old.";
+                        }
+
+                        else if ((age.years == 0) && (age.months > 0) && (age.days > 0)) {
+                            ageString = `Your Age is ${age.months + monthString} and ${age.days + dayString} old.`;
+                        }
+
+                        else if ((age.years > 0) && (age.months == 0) && (age.days > 0)) {
+                            ageString = `Your Age is ${age.years + yearString} and ${age.days + dayString} old.`;
+                        }
+
+                        else if ((age.years == 0) && (age.months > 0) && (age.days == 0)) {
+                            ageString = `Your Age is ${age.months + monthString} old.`;
+                        }
+                        else ageString = "Please Add A valid Birth Date";
+
+                        return ageString;
+                        break;
+
+                    case "AR":
+                        if (age.years > 1) yearString = " سنة";
+                        else yearString = " سنوات";
+                        if (age.months <= 10) monthString = " أشهر";
+                        else if (dage.months > 10) monthString = " شهرا";
+                        if (age.days >= 10) {
+                            dayString = " يوما";
+                        }
+                        else if (age.days > 1) dayString = " أيام";
+
+
+                        if ((age.years > 0) && (age.months > 0) && (age.days > 0)) {
+                            ageString = `عمرك الأن ${age.years + yearString} ${age.months + monthString} و ${age.days + dayString}`;
+                        }
+
+                        else if ((age.years == 0) && (age.months == 0) && (age.days > 0)) {
+                            ageString = `فقط ${age.days + dayString}`;
+                        }
+
+                        else if ((age.years > 0) && (age.months == 0) && (age.days == 0)) {
+                            ageString = `عمرك الأن ${age.years + yearString} عيد ميلاد سعيد!`;
+                        }
+
+                        else if ((age.years > 0) && (age.months > 0) && (age.days == 0)) {
+                            ageString = age.years + yearString + " و " + age.months + monthString;
+                        }
+
+                        else if ((age.years == 0) && (age.months > 0) && (age.days > 0)) {
+                            ageString = `عمرك الأن ${age.months + monthString} و ${age.days + dayString}.`;
+                        }
+
+                        else if ((age.years > 0) && (age.months == 0) && (age.days > 0)) {
+                            ageString = `عمرك الأن ${age.years + yearString} و ${age.days + dayString}`;
+                        }
+
+                        else if ((age.years == 0) && (age.months > 0) && (age.days == 0)) {
+                            ageString = `عمرك الأن ${age.months + monthString}`;
+                        }
+                        else ageString = "أرجوك أدخل بياناتك الصحيحة";
+
+                        return ageString;
+
+                        break;
+                }
+
+            }
+
+        lan.addEventListener('change', (e) => {
+            switch (e.target.id) {
+                case "EN":
+                    current = "EN"
+                    h3.innerHTML = `Select Your Birth Date <span title="month/day/year">(mm/dd/yyyy)</span>`
+                    h2.innerText = 'Select Your Birth Date Above'
+                    bt.innerText = 'SEND'
+                    if (date.value === "" || !first) {
+                        return null
+                    } else {
+                        Months.innerText = `Months : ${Math.round((new Date().getTime() - new Date(date.value).getTime()) / (1000 * 60 * 60 * 24 * 30))} month`
+                        Days.innerText = `Days : ${Math.round((new Date().getTime() - new Date(date.value).getTime()) / (1000 * 60 * 60 * 24))} day`
+                        Hours.innerText = `Hours : ${Math.round((new Date().getTime() - new Date(date.value).getTime()) / (1000 * 60 * 60))} hour`
+                    }
+                    !first ? null : h2.innerText = getAge(date.value)
+                    break;
+
+                case "AR":
+                    current = "AR"
+                    h3.innerHTML = `أدخل تاريخ ولادتك <span title="عام/اليوم/الشهر">(mm/dd/yyyy)</span>`
+                    h2.innerText = 'اختر تاريخ ولادتك في الأعلي'
+                    bt.innerText = 'بعث'
+                    if (date.value === "" || !first) {
+                        return null
+                    } else {
+                        Months.innerText = `الأشهر : ${Math.round((new Date().getTime() - new Date(date.value).getTime()) / (1000 * 60 * 60 * 24 * 30))} شهرا`
+                        Days.innerText = `الأيام : ${Math.round((new Date().getTime() - new Date(date.value).getTime()) / (1000 * 60 * 60 * 24))} يوما`
+                        Hours.innerText = `الساعات : ${Math.round((new Date().getTime() - new Date(date.value).getTime()) / (1000 * 60 * 60))} ساعة`
+                    }
+                    !first ? null : h2.innerText = getAge(date.value)
+                    break
+            }
+        })
+
+        f.addEventListener('submit', (e) => {
+            e.preventDefault()
+            first = true
+            h2.innerText = getAge(date.value)
+            window.alert(getAge(date.value))
+            if (current === "EN") {
+                Months.innerText = `Months : ${Math.round((new Date().getTime() - new Date(date.value).getTime()) / (1000 * 60 * 60 * 24 * 30))} month`
+                Days.innerText = `Days : ${Math.round((new Date().getTime() - new Date(date.value).getTime()) / (1000 * 60 * 60 * 24))} day`
+                Hours.innerText = `Hours : ${Math.round((new Date().getTime() - new Date(date.value).getTime()) / (1000 * 60 * 60))} hour`
+            } else {
+                Months.innerText = `الأشهر : ${Math.round((new Date().getTime() - new Date(date.value).getTime()) / (1000 * 60 * 60 * 24 * 30))} شهرا`
+                Days.innerText = `الأيام : ${Math.round((new Date().getTime() - new Date(date.value).getTime()) / (1000 * 60 * 60 * 24))} يوما`
+                Hours.innerText = `الساعات : ${Math.round((new Date().getTime() - new Date(date.value).getTime()) / (1000 * 60 * 60))} ساعة`
+            }
+        })
+
+
+    </script>
+</body>
+
+
+</html>
